@@ -11,10 +11,10 @@ pkgname=('linux44' 'linux44-headers')
 _kernelname=-MANJARO
 _basekernel=4.4
 _basever=44
-_aufs=20160118
+_aufs=20160301
 _bfq=v7r8
-pkgver=${_basekernel}.1
-pkgrel=2
+pkgver=${_basekernel}.4
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -35,6 +35,7 @@ source=(#"https://www.kernel.org/pub/linux/kernel/v4.x/linux-${_basekernel}.tar.
         'aufs4-mmap.patch'
         'aufs4-standalone.patch'
         'tmpfs-idr.patch'
+        'vfs-ino.patch'
         'http://sources.gentoo.org/cgi-bin/viewvc.cgi/linux-patches/genpatches-2.6/trunk/3.15/1700_enable-thinkpad-micled.patch'
         'http://sources.gentoo.org/cgi-bin/viewvc.cgi/linux-patches/genpatches-2.6/trunk/3.15/2700_ThinkPad-30-brightness-control-fix.patch'
         "0001-block-cgroups-kconfig-build-bits-for-BFQ-${_bfq}.patch::ftp://teambelgium.net/bfq/patches/4.3.0-${_bfq}/0001-block-cgroups-kconfig-build-bits-for-BFQ-${_bfq}-4.3.patch"
@@ -45,24 +46,22 @@ source=(#"https://www.kernel.org/pub/linux/kernel/v4.x/linux-${_basekernel}.tar.
         # MANJARO Patches
         "0004-block-bfq-update-migration-methods-attach-for-4.4-rc5-v7r8.patch"
         'nvidia-304xx-mtrr-unknown-symbol.patch'
-        '0001-tpmdd-devel-v3-base-platform-fix-binding-for-drivers-without-probe-callback.patch'
         '0001-sdhci-revert.patch'
-        '0001-4.4-revert-xfs.patch'
-        '0001-4.4-revert-btrfs.patch'
 )
 sha256sums=('5b8fc6519a737a5c809171e08225f050bf794f1f369c4c387ed3c8a89b1e995b'
-            'c0218043e61da3921cd14579ae4a8774a6fdad91667a9fdb851d0a35f62edb48'
+            '9061d8f57cc25d760387c4e6b7d5cceacaa808e8784a3e478012e7c2949853c8'
             'd51e5649e88de56891c9270d1872c18dde28dee4b86cb157ce22da4f3eacc55a'
             'f2f6e7fbe1612eb5bb79f3337992c6c8c1b4f9b0ad9812446231304acdfb0719'
             'd1cecc720df66c70f43bdb86e0169d6b756161c870db8d7d39c32c04dc36ed36'
             '6d058de24e029651eef6e7e0133616eddf710aa51dfbba1652026f57a35e42ad'
-            'd55b0bae793e9cad34421d416f82c95edb39e25e1809d63eb2cfafc713622831'
-            '45f31b5d175a1243e98145d605f20614f9bd204a3ff3dd3b97904567a2e5461c'
+            '509bdc2d7a6026eb469e335b6978816c2ceb67ce873e075d9557242594236898'
+            '7cb45ddfd34ce6dd6857e86e1ea0d0b842f943f46c5bc07b5f353085720e509a'
             '31ba01590164e89cf275de5a9f2700c4044e79b1d880bafc0b1bfbcaf09ca37c'
-            'fde3e5b9276794e8f350acac1da9b1e0521f410d13552bb4d0dc2296a565b58f'
+            '07b5f6825f447946b0bf72cdc9cbbf5d4ef4157b69c37ab3f02d67ccac7fd214'
             'e732b259c3a49dcf77f4e59af2f99a9eee0a03b897ef72e445b2c327c0b75bb4'
-            '07694aac941214e42310ff114ae4df53f23196dc54ba68c675768e37cced1c55'
+            'f049740233777e7a7d46a36b10bdc7dd65afc6bce44c2fd300ca19446b6a93c4'
             '0d8ecaa41661327d592c03bb20bf5f911a515e7caf35d457de4e802a55df4498'
+            '6f7aa69101d690df2286dd2642a23bce835efab96273389b243dafbec15a1d0c'
             '461aa0da7de8bda9474797339532304894b55825be34f8c009244da8c00c5b41'
             'a3f85c3c35ee478fd174f8aaa6ca15e5fad8612b42ca4d90cc3ef79b49a99989'
             'ebeb62206999b2749ac43bb287a6a2a5db4f6b1b688a90cefa1ceb5db94aa490'
@@ -71,10 +70,7 @@ sha256sums=('5b8fc6519a737a5c809171e08225f050bf794f1f369c4c387ed3c8a89b1e995b'
             '44e7e15c95af9676f715569e72688fd64304a70d2854b0f804c156d4961c72c0'
             '13dfa028214687b3f40b686d7a7fd370b3179a8df90dfb3b00a098cf454b2a7b'
             '3c158ebe93e3710d9a669015f0868f89c5170efdc36cb7cf5f46cc85df61ad3e'
-            'ab57037ecee0a425c612babdff47c831378bca0bff063a1308599989a350226d'
-            '5313df7cb5b4d005422bd4cd0dae956b2dadba8f3db904275aaf99ac53894375'
-            'ffbfaa192d17bfc7c6293aa9a07efe57f65177051ae3d8033d5e45a7bca2e0ad'
-            '51586b733e9f178bebe577258b6057b035eded516ffe8bf8bbb26cb0b26c4958')
+            '5313df7cb5b4d005422bd4cd0dae956b2dadba8f3db904275aaf99ac53894375')
 
 prepare() {
   cd "${srcdir}/linux-${_basekernel}"
@@ -93,15 +89,6 @@ prepare() {
   # https://github.com/manjaro/packages-core/issues/27
   patch -Rp1 -i "${srcdir}/0001-sdhci-revert.patch"
 
-  # fixes #47805 kernel panics on platform modules
-  # https://bugzilla.kernel.org/show_bug.cgi?id=110751
-  # https://github.com/manjaro/packages-core/issues/27
-  patch -Np1 -i "${srcdir}/0001-tpmdd-devel-v3-base-platform-fix-binding-for-drivers-without-probe-callback.patch"
-
-  # #47757 fix broken suspend from btrfs and xfs
-  patch -Np1 -i "${srcdir}/0001-4.4-revert-xfs.patch"
-  patch -Np1 -i "${srcdir}/0001-4.4-revert-btrfs.patch"
-
   # set DEFAULT_CONSOLE_LOGLEVEL to 4 (same value as the 'quiet' kernel param)
   # remove this when a Kconfig knob is made available by upstream
   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
@@ -119,6 +106,7 @@ prepare() {
   patch -Np1 -i "${srcdir}/aufs4-mmap.patch"
   patch -Np1 -i "${srcdir}/aufs4-standalone.patch"
   patch -Np1 -i "${srcdir}/tmpfs-idr.patch"
+  patch -Np1 -i "${srcdir}/vfs-ino.patch"
 
   # add BFQ scheduler
   sed -i -e 's|__GFP_WAIT|__GFP_DIRECT_RECLAIM|g' "${srcdir}/0002-block-introduce-the-BFQ-${_bfq}-I-O-sched.patch"

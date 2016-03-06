@@ -1,5 +1,5 @@
 diff --git a/fs/inode.c b/fs/inode.c
-index 26753ba..61e0af2 100644
+index 56d1d2b..d56a8a1 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -840,6 +840,8 @@ unsigned int get_next_ino(void)
